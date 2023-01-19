@@ -1,1 +1,0 @@
-# Test Performance GraphQL
