@@ -1,0 +1,57 @@
+// /graphql/types/Link.ts
+import { objectType, extendType, nonNull, stringArg, arg } from 'nexus'
+
+export const Product = objectType({
+  name: 'Product',
+  definition(t) {
+    t.nonNull.string('id')
+    t.string('name')
+    t.string('material')
+    t.string('description')
+    t.string('imageUrl')
+    t.string('price')
+    t.string('supplierId')
+  },
+})
+
+export const ProductsQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.list.field('products', {
+      type: 'Product',
+      resolve: async (_parent, _args, ctx) => {
+        return ctx.prisma.product.findMany()
+      },
+    })
+  },
+})
+
+export const CreateProductMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('createProduct', {
+      type: Product,
+      args: {
+        name: nonNull(stringArg()),
+        material: nonNull(stringArg()),
+        imageUrl: nonNull(stringArg()),
+        price: nonNull(stringArg()),
+        description: nonNull(stringArg()),
+        supplierId: nonNull(stringArg()),
+      },
+      async resolve(_parent, args, ctx) {
+        const newLink = {
+          name: args.name,
+          material: args.material,
+          imageUrl: args.imageUrl,
+          price: args.price,
+          description: args.description,
+          supplierId: args.supplierId,
+        }
+        return await ctx.prisma.product.create({
+          data: newLink,
+        })
+      },
+    })
+  },
+})

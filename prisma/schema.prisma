@@ -1,37 +1,26 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Link {
-  id          String   @id @default(uuid())
-  index       Int      @default(autoincrement()) @unique
-  title       String
-  description String
-  url         String
-  imageUrl    String
-  category    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  users       User[]
+model Supplier {
+  id                String  @id @default(uuid()) @unique
+  name              String
+  description       String
+  address           String 
+  product           Product[]
 }
 
-model User {
-  id        String   @id @default(uuid())
-  email     String?  @unique
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  favorites Link[]
-  role      Role     @default(USER)
-}
-
-enum Role {
-  USER
-  ADMIN
+model Product {
+  id                String   @id @default(uuid()) @unique
+  name              String
+  material          String
+  description       String
+  imageUrl          String
+  price             String
+  supplierId        String
+  supplier          Supplier @relation(fields: [supplierId], references: [id])
 }

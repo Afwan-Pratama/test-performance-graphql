@@ -5,26 +5,7 @@ import { gql, useLazyQuery } from '@apollo/client'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const getAllLinks = gql`
-  query Links {
-    links {
-      id
-      title
-      url
-      description
-      imageUrl
-      category
-    }
-  }
-`
-
 export default function Home() {
-  const [getLinks, { loading, error, data }] = useLazyQuery(getAllLinks)
-
-  const handleFetch = async () => {
-    await getLinks()
-  }
-
   return (
     <>
       <Head>
@@ -34,7 +15,7 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main className={styles.main}>
-        <button onClick={handleFetch}> Get Links </button>
+        <button> Get Links </button>
       </main>
     </>
   )

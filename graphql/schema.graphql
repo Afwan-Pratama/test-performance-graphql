@@ -2,35 +2,29 @@
 ### Do not make changes to this file directly
 
 
-type Link {
-  category: String
-  description: String
-  id: String
-  imageUrl: String
-  title: String
-  url: String
-  users: [User]
+type Mutation {
+  createProduct(description: String!, imageUrl: String!, material: String!, name: String!, price: String!, supplierId: String!): Product!
+  createSupplier(address: String!, description: String!, name: String!): Supplier!
 }
 
-type Mutation {
-  createLink(category: String!, description: String!, imageUrl: String!, title: String!, url: String!): Link!
+type Product {
+  description: String
+  id: String!
+  imageUrl: String
+  material: String
+  name: String
+  price: String
+  supplierId: String
 }
 
 type Query {
-  links: [Link]!
-  users: [User]!
+  products: [Product]
+  suppliers: [Supplier]
 }
 
-enum Role {
-  ADMIN
-  USER
-}
-
-type User {
-  bookmarks: [Link]
-  email: String
-  id: String
-  image: String
+type Supplier {
+  address: String
+  description: String
+  id: String!
   name: String
-  role: Role
 }
