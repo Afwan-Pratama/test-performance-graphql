@@ -14,7 +14,8 @@ type Product {
   material: String
   name: String
   price: String
-  supplierId: String
+  supplier: Supplier
+  supplierId: String!
 }
 
 type Query {
@@ -27,4 +28,5 @@ type Supplier {
   description: String
   id: String!
   name: String
+  products: [Product]
 }

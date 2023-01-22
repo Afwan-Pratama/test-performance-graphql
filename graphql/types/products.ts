@@ -10,7 +10,24 @@ export const Product = objectType({
     t.string('description')
     t.string('imageUrl')
     t.string('price')
-    t.string('supplierId')
+    t.nonNull.string('supplierId')
+    t.field('supplier', {
+      type: 'Supplier',
+      resolve: async (root, arg, ctx) => {
+        const res: any = await ctx.prisma.supplier
+          .findFirst({
+            where: {
+              id: root.supplierId ?? '',
+            },
+          })
+          .product({
+            where: {
+              id: root.id,
+            },
+          })
+        return res[0]
+      },
+    })
   },
 })
 

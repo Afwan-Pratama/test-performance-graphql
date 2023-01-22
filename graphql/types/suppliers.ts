@@ -8,6 +8,18 @@ export const Supplier = objectType({
     t.string('name')
     t.string('description')
     t.string('address')
+    t.list.field('products', {
+      type: 'Product',
+      resolve: async (root, arg, ctx) => {
+        return await ctx.prisma.supplier
+          .findUnique({
+            where: {
+              id: root.id,
+            },
+          })
+          .product()
+      },
+    })
   },
 })
 
