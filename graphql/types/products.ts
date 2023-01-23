@@ -81,11 +81,38 @@ export const ProductsQueryWithPagination = extendType({
   },
 })
 
+export const ProductsQueryWithFiltering = extendType({
+  type: 'Query',
+  definition(t) {
+    t.list.field('productsWithFiltering', {
+      type: 'Product',
+      args: {
+        id: stringArg(),
+        name: stringArg(),
+        material: stringArg(),
+        supplierId: stringArg(),
+      },
+      resolve: async (root, arg, ctx) => {
+        return ctx.prisma.product.findMany({
+          where: {
+            OR: [
+              { id: arg.id ?? '' },
+              { name: arg.name ?? '' },
+              { material: arg.material ?? '' },
+              { supplierId: arg.material ?? '' },
+            ],
+          },
+        })
+      },
+    })
+  },
+})
+
 export const CreateProductMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('createProduct', {
-      type: Product,
+      type: 'Product',
       args: {
         name: nonNull(stringArg()),
         material: nonNull(stringArg()),
@@ -95,7 +122,7 @@ export const CreateProductMutation = extendType({
         supplierId: nonNull(stringArg()),
       },
       async resolve(_parent, args, ctx) {
-        const newLink = {
+        const newProduct = {
           name: args.name,
           material: args.material,
           imageUrl: args.imageUrl,
@@ -104,7 +131,72 @@ export const CreateProductMutation = extendType({
           supplierId: args.supplierId,
         }
         return await ctx.prisma.product.create({
-          data: newLink,
+          data: newProduct,
+        })
+      },
+    })
+  },
+})
+
+export const UpdateProductMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('updateProduct', {
+      type: 'Product',
+      args: {
+        id: nonNull(stringArg()),
+        name: stringArg(),
+        material: stringArg(),
+        imageUrl: stringArg(),
+        price: stringArg(),
+        description: stringArg(),
+        supplierId: stringArg(),
+      },
+      resolve: async (root, args, ctx) => {
+        type dictionaryProduct = { [index: string]: string | null | undefined }
+
+        const newProduct: dictionaryProduct = {
+          name: args.name?.toLowerCase(),
+          material: args.material?.toLowerCase(),
+          imageUrl: args.imageUrl,
+          price: args.price,
+          description: args.description?.toLowerCase(),
+          supplierId: args.supplierId,
+        }
+
+        const obj: dictionaryProduct = {}
+
+        for (let i = 0; i < Object.keys(newProduct).length; i++) {
+          const indexObj: string = Object.keys(newProduct)[i]
+          if (newProduct[indexObj]) {
+            obj[indexObj] = newProduct[indexObj]
+          }
+        }
+
+        return ctx.prisma.product.update({
+          data: obj,
+          where: {
+            id: args.id ?? '',
+          },
+        })
+      },
+    })
+  },
+})
+
+export const DeleteProductMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('deleteProduct', {
+      type: 'Product',
+      args: {
+        id: nonNull(stringArg()),
+      },
+      resolve: async (root, args, ctx) => {
+        return ctx.prisma.product.delete({
+          where: {
+            id: args.id,
+          },
         })
       },
     })

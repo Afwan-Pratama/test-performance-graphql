@@ -5,6 +5,8 @@
 type Mutation {
   createProduct(description: String!, imageUrl: String!, material: String!, name: String!, price: String!, supplierId: String!): Product!
   createSupplier(address: String!, description: String!, name: String!): Supplier!
+  deleteProduct(id: String!): Product!
+  updateProduct(description: String, id: String!, imageUrl: String, material: String, name: String, price: String, supplierId: String): Product!
 }
 
 type Product {
@@ -20,6 +22,7 @@ type Product {
 
 type Query {
   products: [Product]
+  productsWithFiltering(id: String, material: String, name: String, supplierId: String): [Product]
   productsWithLimit(limit: Int): [Product]
   productsWithPagination(limit: Int, page: Int): [Product]
   suppliers: [Supplier]
