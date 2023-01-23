@@ -20,6 +20,8 @@ type Product {
 
 type Query {
   products: [Product]
+  productsWithLimit(limit: Int): [Product]
+  productsWithPagination(limit: Int, page: Int): [Product]
   suppliers: [Supplier]
 }
 
