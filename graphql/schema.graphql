@@ -29,9 +29,9 @@ type Query {
 }
 
 type Supplier {
-  address: String
-  description: String
+  address: String!
+  description: String!
   id: String!
-  name: String
-  products: [Product]
+  name: String!
+  product: [Product!]!
 }
