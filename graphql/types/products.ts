@@ -96,10 +96,10 @@ export const ProductsQueryWithFiltering = extendType({
         return ctx.prisma.product.findMany({
           where: {
             OR: [
-              { id: arg.id ?? '' },
-              { name: arg.name ?? '' },
-              { material: arg.material ?? '' },
-              { supplierId: arg.material ?? '' },
+              { id: arg.id ?? undefined },
+              { name: arg.name ?? undefined },
+              { material: arg.material ?? undefined },
+              { supplierId: arg.material ?? undefined },
             ],
           },
         })
