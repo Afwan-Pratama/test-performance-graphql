@@ -31,7 +31,7 @@ type Query {
 type Supplier {
   address: String!
   description: String!
-  id: String!
+  id: ID!
   name: String!
   product: [Product!]!
 }
