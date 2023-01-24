@@ -22,7 +22,12 @@ export const ProductsQuery = extendType({
   definition(t) {
     t.list.field('products', {
       type: 'Product',
-      resolve: async (_parent, _args, ctx) => {
+      resolve: (_parent, _args, ctx) => {
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.findMany()
       },
     })
@@ -38,6 +43,11 @@ export const ProductsQueryWithLimit = extendType({
         limit: intArg(),
       },
       resolve: async (root, arg, ctx) => {
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.findMany({
           take: arg.limit ?? 0,
         })
@@ -58,6 +68,11 @@ export const ProductsQueryWithPagination = extendType({
       resolve: async (root, arg, ctx) => {
         const limit: number = arg.limit ?? 0
         const page: number = arg.page ?? 0
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.findMany({
           skip: limit * page + 1,
           take: limit,
@@ -79,6 +94,11 @@ export const ProductsQueryWithFiltering = extendType({
         supplierId: stringArg(),
       },
       resolve: async (root, arg, ctx) => {
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.findMany({
           where: {
             OR: [
@@ -116,6 +136,11 @@ export const CreateProductMutation = extendType({
           description: args.description,
           supplierId: args.supplierId,
         }
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return await ctx.prisma.product.create({
           data: newProduct,
         })
@@ -158,7 +183,11 @@ export const UpdateProductMutation = extendType({
             obj[indexObj] = newProduct[indexObj]
           }
         }
-
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.update({
           data: obj,
           where: {
@@ -179,6 +208,11 @@ export const DeleteProductMutation = extendType({
         id: nonNull(stringArg()),
       },
       resolve: async (root, args, ctx) => {
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.product.delete({
           where: {
             id: args.id,

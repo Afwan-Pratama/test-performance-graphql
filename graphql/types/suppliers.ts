@@ -11,7 +11,6 @@ export const SupplierType = objectType({
     t.field(Supplier.description)
     t.field(Supplier.address)
     t.field(Supplier.product)
-    t.nonNull.string('id')
   },
 })
 
@@ -20,7 +19,12 @@ export const SuppliersQuery = extendType({
   definition(t) {
     t.list.field('suppliers', {
       type: 'Supplier',
-      resolve: async (_parent, _args, ctx) => {
+      resolve: (_parent, _args, ctx) => {
+        console.log(
+          'memory usage :',
+          process.memoryUsage().heapUsed / 1024 / 1024,
+          'MB'
+        )
         return ctx.prisma.supplier.findMany()
       },
     })
