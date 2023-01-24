@@ -29,6 +29,8 @@ export const SuppliersQuery = extendType({
     t.list.field('suppliers', {
       type: 'Supplier',
       resolve: async (_parent, _args, ctx) => {
+        console.log(process.cpuUsage().user / 1000)
+        console.log(process.memoryUsage().heapUsed / 1024 / 1024)
         return ctx.prisma.supplier.findMany()
       },
     })
