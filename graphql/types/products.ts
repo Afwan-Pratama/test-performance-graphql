@@ -1,33 +1,19 @@
 // /graphql/types/Link.ts
 import { objectType, extendType, nonNull, stringArg, arg, intArg } from 'nexus'
 
-export const Product = objectType({
-  name: 'Product',
+import { Product } from 'nexus-prisma'
+
+export const ProductType = objectType({
+  name: Product.$name,
   definition(t) {
-    t.nonNull.string('id')
-    t.string('name')
-    t.string('material')
-    t.string('description')
-    t.string('imageUrl')
-    t.string('price')
-    t.nonNull.string('supplierId')
-    t.field('supplier', {
-      type: 'Supplier',
-      resolve: async (root, arg, ctx) => {
-        const res: any = await ctx.prisma.supplier
-          .findFirst({
-            where: {
-              id: root.supplierId ?? '',
-            },
-          })
-          .product({
-            where: {
-              id: root.id,
-            },
-          })
-        return res[0]
-      },
-    })
+    t.field(Product.id)
+    t.field(Product.name)
+    t.field(Product.description)
+    t.field(Product.material)
+    t.field(Product.imageUrl)
+    t.field(Product.price)
+    t.field(Product.supplierId)
+    t.field(Product.supplier)
   },
 })
 

@@ -10,13 +10,13 @@ type Mutation {
 }
 
 type Product {
-  description: String
-  id: String!
-  imageUrl: String
-  material: String
-  name: String
-  price: String
-  supplier: Supplier
+  description: String!
+  id: ID!
+  imageUrl: String!
+  material: String!
+  name: String!
+  price: String!
+  supplier: Supplier!
   supplierId: String!
 }
 
@@ -29,9 +29,9 @@ type Query {
 }
 
 type Supplier {
-  address: String
-  description: String
+  address: String!
+  description: String!
   id: String!
-  name: String
-  products: [Product]
+  name: String!
+  product: [Product!]!
 }

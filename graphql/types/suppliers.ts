@@ -1,25 +1,17 @@
 // /graphql/types/Link.ts
-import { objectType, extendType, nonNull, stringArg, arg } from 'nexus'
+import { objectType, extendType, nonNull, stringArg } from 'nexus'
 
-export const Supplier = objectType({
-  name: 'Supplier',
+import { Supplier } from 'nexus-prisma'
+
+export const SupplierType = objectType({
+  name: Supplier.$name,
   definition(t) {
+    t.field(Supplier.id)
+    t.field(Supplier.name)
+    t.field(Supplier.description)
+    t.field(Supplier.address)
+    t.field(Supplier.product)
     t.nonNull.string('id')
-    t.string('name')
-    t.string('description')
-    t.string('address')
-    t.list.field('products', {
-      type: 'Product',
-      resolve: async (root, arg, ctx) => {
-        return await ctx.prisma.supplier
-          .findUnique({
-            where: {
-              id: root.id,
-            },
-          })
-          .product()
-      },
-    })
   },
 })
 
@@ -39,7 +31,7 @@ export const CreateSupplierMutation = extendType({
   type: 'Mutation',
   definition(t) {
     t.nonNull.field('createSupplier', {
-      type: Supplier,
+      type: 'Supplier',
       args: {
         name: nonNull(stringArg()),
         address: nonNull(stringArg()),
