@@ -94,6 +94,20 @@ export const ProductsQueryWithFiltering = extendType({
         supplierId: stringArg(),
       },
       resolve: async (root, arg, ctx) => {
+        type dictionaryProduct = { [index: string]: string | null | undefined }
+        const obj: object[] = []
+
+        const newProduct: dictionaryProduct = {
+          name: arg.name?.toLowerCase(),
+          material: arg.material?.toLowerCase(),
+          supplierId: arg.supplierId,
+        }
+        for (let i = 0; i < Object.keys(newProduct).length; i++) {
+          const indexObj: string = Object.keys(newProduct)[i]
+          if (newProduct[indexObj]) {
+            obj.push({ [indexObj]: newProduct[indexObj] })
+          }
+        }
         console.log(
           'memory usage :',
           process.memoryUsage().heapUsed / 1024 / 1024,
@@ -101,12 +115,7 @@ export const ProductsQueryWithFiltering = extendType({
         )
         return ctx.prisma.product.findMany({
           where: {
-            OR: [
-              { id: arg.id ?? undefined },
-              { name: arg.name ?? undefined },
-              { material: arg.material ?? undefined },
-              { supplierId: arg.material ?? undefined },
-            ],
+            AND: obj,
           },
         })
       },
@@ -205,7 +214,7 @@ export const DeleteProductMutation = extendType({
     t.nonNull.field('deleteProduct', {
       type: 'Product',
       args: {
-        id: nonNull(stringArg()),
+        material: nonNull(stringArg()),
       },
       resolve: async (root, args, ctx) => {
         console.log(
@@ -213,9 +222,9 @@ export const DeleteProductMutation = extendType({
           process.memoryUsage().heapUsed / 1024 / 1024,
           'MB'
         )
-        return ctx.prisma.product.delete({
+        return ctx.prisma.product.deleteMany({
           where: {
-            id: args.id,
+            material: args.material,
           },
         })
       },
